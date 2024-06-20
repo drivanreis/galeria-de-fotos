@@ -1,4 +1,4 @@
-// src/components/UploadPhoto.tsx
+// ../app/frontend/src/components/UploadPhoto.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -23,7 +23,7 @@ const UploadPhoto: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('Foto carregada com sucesso!');
+      window.location.reload();
     } catch (error) {
       console.error('Erro ao carregar a foto:', error);
       alert('Erro ao carregar a foto');

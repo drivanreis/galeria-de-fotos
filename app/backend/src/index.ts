@@ -1,56 +1,48 @@
-// src/index.ts
+// ../app/backend/src/index.ts
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
 const app = express();
-const port = 4001;
+const PORT = 4001;
 
-// Configuração do multer para armazenamento de fotos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'storage/photos/');
+    cb(null, path.join(__dirname, '../../storage/photos'));
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
+    cb(null, file.originalname); // Mantendo o nome original do arquivo
+  }
 });
 
 const upload = multer({ storage });
 
 // Middleware para permitir CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+app.use((_req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
-// Rota para carregar uma foto
 app.post('/upload', upload.single('photo'), (req, res) => {
-  res.send('Foto carregada com sucesso!');
+  res.send('Upload realizado com sucesso');
 });
 
-// Rota para listar todas as fotos
 app.get('/photos', (req, res) => {
-  const directoryPath = path.join(__dirname, '../storage/photos');
-  fs.readdir(directoryPath, (err, files) => {
+  const photosDirectory = path.join(__dirname, '../../storage/photos');
+  fs.readdir(photosDirectory, (err, files) => {
     if (err) {
-      return res.status(500).send('Erro ao listar fotos');
+      res.status(500).send('Erro ao listar fotos');
+      return;
     }
-    res.send(files);
+    res.json(files);
   });
 });
 
-// Rota para servir uma foto específica
-app.get('/photos/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, '../storage/photos', filename);
-  res.sendFile(filePath);
-});
+app.use('/photos', express.static(path.join(__dirname, '../../storage/photos')));
 
-// Iniciando o servidor
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Servidor backend rodando na porta ${PORT}`);
 });
