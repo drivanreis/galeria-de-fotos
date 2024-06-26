@@ -10,8 +10,10 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 4001
+EXPOSE 3001
 
 RUN npm run build
 
-CMD ["npm", "start"]
+# ENTRYPOINT [ "npm", "run" ]
+
+ CMD [ "npm run start" ]

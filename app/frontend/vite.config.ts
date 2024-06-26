@@ -7,11 +7,23 @@
 // })
 
 
+// import { defineConfig } from 'vite';
+
+// export default defineConfig({
+//   server: {
+//     port: 3000 // Definindo a porta 4000 para o servidor Vite
+//   }
+// });
+
+
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  plugins: [react()],
   server: {
-    port: 4000 // Definindo a porta 4000 para o servidor Vite
-  }
+    port: 3000,
+    host: true,
+  },
 });
 

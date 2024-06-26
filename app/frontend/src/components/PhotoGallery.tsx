@@ -1,17 +1,22 @@
-// src/components/PhotoGallery.tsx
+// ../app/frontend/src/components/PhotoGallery.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './PhotoGallery.css';
+
+// const backEndURL = process.env.BACKEND_URL
+const backEndURL = 'http://localhost:3001'
+console.log(backEndURL);
+const backEndUrlFotos = `${backEndURL}/photos`;
 
 const PhotoGallery: React.FC = () => {
   const [photos, setPhotos] = useState<string[]>([]);
 
   const fetchPhotos = async () => {
     try {
-      const response = await axios.get<string[]>('http://localhost:4001/photos');
+      const response = await axios.get<string[]>(backEndUrlFotos);
       setPhotos(response.data);
     } catch (error) {
-      console.error('Erro ao buscar fotos:', error);
+      console.log('Erro ao buscar fotos:', error);
     }
   };
 
@@ -24,7 +29,7 @@ const PhotoGallery: React.FC = () => {
     {photos.map((photo, index) => (
         <img
         key={index}
-        src={`http://localhost:4001/photos/${photo}`}
+        src={`${backEndUrlFotos}/${photo}`}
         alt={`Foto ${index + 1}`}
         />
     ))}

@@ -1,0 +1,39 @@
+# ../app/docker-compose.yml
+version: '3.9'
+
+services:
+  backend:
+    container_name: app_backend
+    build: ./backend
+    ports:
+      - "3001:3001"
+    working_dir: /app-backend
+    command: npm start
+    environment:
+      - ALLOWED_ORIGIN=http://localhost:3000
+    volumes: 
+      - ./backend/src:/app-backend/src
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  frontend:
+    container_name: app_frontend
+    build: ./frontend
+    ports:
+     - "3000:3000"
+    environment:
+     - BACKEND_URL=http://localhost:3001
+    working_dir: /app-frontend
+    volumes: 
+    - ./frontend/src:/app-frontend/src
+    depends_on:
+     - backend
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+

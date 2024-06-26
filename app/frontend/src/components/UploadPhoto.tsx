@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// const backEndURL = process.env.BACKEND_URL
+const backEndURL = 'http://localhost:3001'
+
 const UploadPhoto: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
 
@@ -18,7 +21,7 @@ const UploadPhoto: React.FC = () => {
     formData.append('photo', file);
 
     try {
-      await axios.post('http://localhost:4001/upload', formData, {
+      await axios.post(`${backEndURL}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
