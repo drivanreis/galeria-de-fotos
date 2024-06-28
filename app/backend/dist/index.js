@@ -11,27 +11,31 @@ const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const PORT = 3001;
-const storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path_1.default.join(__dirname, '../storage/photos'));
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // Mantendo o nome original do arquivo
-    }
-});
-const upload = (0, multer_1.default)({ storage });
-// Middleware para permitir CORS
+let allowedOrigin = '';
+// Gente, vou fazer um codigo feio, mas diante das dificudades é o jeito.
+if (process.env.ALLOWED_ORIGIN === undefined || process.env.ALLOWED_ORIGIN === '') {
+    allowedOrigin = 'http://localhost:3000';
+}
+else {
+    allowedOrigin = process.env.ALLOWED_ORIGIN;
+}
+// eu quero ver o que foi definido como origem permitida
+console.log(allowedOrigin);
+// // Middleware para permitir CORS
 // app.use((_req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:4000/photos');
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000/photos');
 //   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //   next();
 // });
 const configureCors = () => {
-    return (0, cors_1.default)({ credentials: true, origin: process.env.ALLOWED_ORIGIN, });
+    return (0, cors_1.default)({
+        credentials: true,
+        origin: allowedOrigin,
+    });
 };
 const accessControl = (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN);
+    res.header('Access-Control-Allow-Origin', allowedOrigin);
     // Specify the allowed origin
     res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -43,8 +47,17 @@ const configureApp = (app) => {
     app.use(accessControl);
 };
 configureApp(app);
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path_1.default.join(__dirname, '../storage/photos'));
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); // Mantendo o nome original do arquivo
+    }
+});
+const upload = (0, multer_1.default)({ storage });
 app.get('/', (req, res) => {
-    res.send('Backend Rodando na porta: 3001');
+    res.send(`Backend Rodando! E a origem permitida é: ${allowedOrigin}`);
 });
 app.post('/upload', upload.single('photo'), (req, res) => {
     res.send('Upload realizado com sucesso');

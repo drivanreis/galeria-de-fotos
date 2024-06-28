@@ -2,8 +2,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-// const backEndURL = process.env.BACKEND_URL
-const backEndURL = 'http://localhost:3001'
+let backEndURL = '';
+if (import.meta.env.BACKEND_URL === undefined || import.meta.env.BACKEND_URL === '') {
+  backEndURL = 'http://localhost:3001';
+} else {
+  backEndURL = import.meta.env.BACKEND_URL;
+}
+console.log(backEndURL);
 
 const UploadPhoto: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);

@@ -10,7 +10,7 @@ services:
     working_dir: /app-backend
     command: npm start
     environment:
-      - ALLOWED_ORIGIN=http://localhost:3000
+      - ALLOWED_ORIGIN=http://189.71.214.150:3000
     volumes: 
       - ./backend/src:/app-backend/src
     healthcheck:
@@ -25,7 +25,8 @@ services:
     ports:
      - "3000:3000"
     environment:
-     - BACKEND_URL=http://localhost:3001
+     - BACKEND_URL=http://189.71.214.150:3001
+     - VITE_BACKEND_URL=http://189.71.214.150:3001
     working_dir: /app-frontend
     volumes: 
     - ./frontend/src:/app-frontend/src

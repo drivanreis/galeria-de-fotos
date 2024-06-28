@@ -64,4 +64,4 @@ docker images
 docker ps -a
 echo "Limpeza Concluida !!!"
 echo "Iniciando o Docker Compose"
-# docker-compose up -d --build
+docker-compose up -d --build
